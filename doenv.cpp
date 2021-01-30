@@ -76,6 +76,39 @@ int main(int argc, char* argv[])
     for(std::vector<std::string>::const_iterator f = vecCommands.begin(); f != vecCommands.end(); ++f)
         std::cout << *f << std::endl;
     
+    // If the -i argument added, wipe out all
+    // the existing env vars
+    if(bReplaceEnvironmentVars)
+    {
+        // Blow out Env Vars
+        #if defined(unix) || defined(__unix__) || defined(__unix)
+            // UNIX Variety of OS // printf("UNIX\n");
+            clearenv();
+        #else
+            // MacOS Variety of OS // printf("MacOS\n");
+            *environ = NULL;
+        #endif
+        
+
+        /*
+        char *strCurrentVal = *environ;
+        int nVarIndex = 1;
+        // Loop and unset everything in environ
+        for (; strCurrentVal; nVarIndex++) {
+            // Get the name token the old fashioned way
+            char *tName = strtok(strCurrentVal,"=");
+            // If found "=", then get name
+            if(tName != NULL)
+            {
+                printf("===>%s\n", tName);
+                unsetenv(tName);
+            }
+
+            strCurrentVal = *(environ+nVarIndex);
+        }
+        */
+    }
+
     // If no new Environ Vars specified, 
     // then just print environment
     if(vecEnvVars.size() < 1)
@@ -85,8 +118,30 @@ int main(int argc, char* argv[])
     }
 
     // If Environ Vars specified Add them
-    putenv("VAR=12345");
+    for(std::vector<std::string>::const_iterator envItem = vecEnvVars.begin(); envItem != vecEnvVars.end(); ++envItem)
+    {
+        // Split the name/value pairs
+        size_t pos = 0;
+        std::string nameToken, valueToken;
+        if ((pos = envItem->find("=")) != std::string::npos)
+        {
+            nameToken = envItem->substr(0, pos);
+            valueToken = envItem->substr(pos+1);
+            if(nameToken.size() > 0 && valueToken.size() > 0)
+                setenv(nameToken.c_str(), valueToken.c_str(), true);
+        }
+    }
 
+
+        // If no commands, just print the updated environment
+        if(vecCommands.size() < 1)
+            printEnvironment();
+    else
+    {
+        // Otherwise execute the command in the
+        // updated shell
+        system("ls");
+    }
 
 
     return 0;
@@ -95,15 +150,20 @@ int main(int argc, char* argv[])
 // Print the Environment Variables
 void printEnvironment()
 {
+    // If empty environ, print nothing
+    if(environ == NULL)
+    {
+        return;
+    }
 
     // Get all Current Environment Vars
     // This is a char* pointing to an array of strings
     char *strCurrentVal = *environ;
 
-        int nVarIndex = 1;
-        for (; strCurrentVal; nVarIndex++) {
-            printf("%s\n", strCurrentVal);
-            strCurrentVal = *(environ+nVarIndex);
+    int nVarIndex = 1;
+    for (; strCurrentVal; nVarIndex++) {
+        printf("%s\n", strCurrentVal);
+        strCurrentVal = *(environ+nVarIndex);
     }
 }
 
