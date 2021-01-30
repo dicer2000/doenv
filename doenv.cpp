@@ -6,7 +6,7 @@
  * Main CPP file for project
  ********************************************/
 #include <iostream>
-#include <string>
+#include <string.h>
 #include <vector>
 #include <ctype.h>
 #include <stdio.h>
@@ -62,53 +62,35 @@ int main(int argc, char* argv[])
         std::string strVal = argv[index];
         // Environment Vars will be of the form
         // name=value
-        //if(std::strstr(argv[index], "=") != NULL)
-        if(std::strchr(argv[index], '=') != NULL)
+        if(strchr(argv[index], '=') != NULL)
             vecEnvVars.push_back(strVal);
         else    // Otherwise, it's a Command
             vecCommands.push_back(strVal);
 
     }
 
-    // DEBUG
+    // DEBUG TESTING
+    /*
     std::cout << "Env Vars" << std::endl;
     for(std::vector<std::string>::const_iterator f = vecEnvVars.begin(); f != vecEnvVars.end(); ++f)
         std::cout << *f << std::endl;
     std::cout << "Commands" << std::endl;
     for(std::vector<std::string>::const_iterator f = vecCommands.begin(); f != vecCommands.end(); ++f)
         std::cout << *f << std::endl;
-    
+    */
+
     // If the -i argument added, wipe out all
     // the existing env vars
     if(bReplaceEnvironmentVars)
     {
         // Blow out Env Vars
-        #if defined(unix) || defined(__unix__) || defined(__unix)
+        #if defined(__linux) || defined(__linux__) ||defined(unix) || defined(__unix__) || defined(__unix)
             // UNIX Variety of OS // printf("UNIX\n");
             clearenv();
         #else
             // MacOS Or Windows Variety of OS // printf("MacOS\n");
             *environ = NULL;
         #endif
-        
-
-        /*
-        char *strCurrentVal = *environ;
-        int nVarIndex = 1;
-        // Loop and unset everything in environ
-        for (; strCurrentVal; nVarIndex++) {
-            // Get the name token the old fashioned way
-            char *tName = strtok(strCurrentVal,"=");
-            // If found "=", then get name
-            if(tName != NULL)
-            {
-                printf("===>%s\n", tName);
-                unsetenv(tName);
-            }
-
-            strCurrentVal = *(environ+nVarIndex);
-        }
-        */
     }
 
     // If no new Environ Vars specified, 
