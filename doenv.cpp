@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
         std::string strVal = argv[index];
         // Environment Vars will be of the form
         // name=value
-        if(strstr(argv[index], "=") != NULL)
+        if(std::strstr(argv[index], "=") != NULL)
             vecEnvVars.push_back(strVal);
         else    // Otherwise, its a Command
             vecCommands.push_back(strVal);
