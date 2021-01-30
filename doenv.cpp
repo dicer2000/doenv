@@ -26,7 +26,8 @@ int main(int argc, char* argv[])
     // Argument processing
     int opt;
     bool bReplaceEnvironmentVars = false;
-    float fScaleSize = 1.0f;
+
+    // Vectors to hold Vars & Commands
     std::vector<std::string> vecEnvVars;
     std::vector<std::string> vecCommands;
 
@@ -48,7 +49,7 @@ int main(int argc, char* argv[])
                         "Unknown option character `\\x%x'.\n", optopt);
                 return 1;
             default:    // An bad input parameter was entered
-                errno = EINVAL;
+                // Show error because a bad option was found
                 perror ("doenv: Error: Illegal option found");
                 show_usage(argv[0]);
                 return 1;
@@ -61,7 +62,7 @@ int main(int argc, char* argv[])
         std::string strVal = argv[index];
         // Environment Vars will be of the form
         // name=value
-        if(std::strstr(argv[index], "=") != NULL)
+        if(strstr(argv[index], "=") != NULL)
             vecEnvVars.push_back(strVal);
         else    // Otherwise, its a Command
             vecCommands.push_back(strVal);
@@ -85,7 +86,7 @@ int main(int argc, char* argv[])
             // UNIX Variety of OS // printf("UNIX\n");
             clearenv();
         #else
-            // MacOS Variety of OS // printf("MacOS\n");
+            // MacOS Or Windows Variety of OS // printf("MacOS\n");
             *environ = NULL;
         #endif
         
