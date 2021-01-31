@@ -102,6 +102,8 @@ int main(int argc, char* argv[])
     }
 
     // If Environ Vars specified Add them
+    // This will also overwrite existing env vars
+    // if a matching name is found
     for(std::vector<std::string>::const_iterator envItem = vecEnvVars.begin(); envItem != vecEnvVars.end(); ++envItem)
     {
         // Split the name/value pairs
@@ -117,16 +119,20 @@ int main(int argc, char* argv[])
     }
 
 
-        // If no commands, just print the updated environment
-        if(vecCommands.size() < 1)
-            printEnvironment();
+    // If no commands, just print the updated environment
+    if(vecCommands.size() < 1)
+        printEnvironment();
     else
     {
-        // Otherwise execute the command in the
-        // updated shell
-        system("ls");
+        // Otherwise execute all commands in this updated
+        // environment that were added
+        // to the initial program arguments
+        for(std::vector<std::string>::const_iterator f = vecCommands.begin(); f != vecCommands.end(); ++f)
+        {
+            std::string strCommand = *f;
+            system(strCommand.c_str());
+        }
     }
-
 
     return 0;
 }
@@ -146,6 +152,7 @@ void printEnvironment()
 
     int nVarIndex = 1;
     for (; strCurrentVal; nVarIndex++) {
+        // print each and increment pointer
         printf("%s\n", strCurrentVal);
         strCurrentVal = *(environ+nVarIndex);
     }
@@ -158,8 +165,8 @@ static void show_usage(std::string name)
     std::cerr << std::endl
               << name << " - env tool by Brett Huffman for CMP SCI 4760" << std::endl
               << std::endl
-              << "Usage:\t" << name << " [-h\n" << std::endl
-              << "\t" << name << " [-i] [var1=value] [var2=value] [...] {command1 [; command2] [; ...]}" << std::endl
+              << "Usage:\t" << name << " [-h]" << std::endl
+              << "\t" << name << " [-i] [var1=value] [var2=value] [...] {command1 [;command2] [;...]}" << std::endl
               << "Options:" << std::endl
               << "  -h Show this help message" << std::endl
               << "  -i Replace the external environment variable" << std::endl

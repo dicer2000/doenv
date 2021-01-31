@@ -16,7 +16,13 @@ The program can be invoked as:
 
 ```
 doenv [-h]
-doenv 
+doenv [-i] [var1=value] [var2=value] [...] {command1 [; command2] [; ...]}
+Options:
+  -h Show this help message
+  -i Replace the external environment variable
+  Optional environment variables can be defined to add/replace variables
+  Commands are utilities to execute after the environment has been changed
+  If commands are omitted, the updated environment is printed
 ```
 
 ## Install
@@ -44,6 +50,6 @@ I needed to add the * before environ to dereference environ.  I was getting a se
 
 1/28/2021 - Started re-working for doenv command. Created basic outline of program, Makefile, README. Performed Testing. Started a test program. Tested on UNIX. Fixed stat problem
 1/29/2021 - Redesigned getopt logic; Added switch logic; Testing; Added pError
-1/30/2021 - Finished Environ logic, debugging; Trying on different platforms to determine which will work best for UNIX.
+1/30/2021 - Finished Environ logic, debugging; Trying on different platforms to determine which will work best for UNIX. Made additional comments.  Handed in v1.0 of the program
 
 *©2021 Brett W. Huffman*
