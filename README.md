@@ -46,12 +46,11 @@ My problem was two-fold.  First, I can use clearenv() on UNIX systems that suppo
 I needed to add the * before environ to dereference environ.  I was getting a segmentation fault when I was doing it to environ.
 
 Another issue came up during testing:  When an unknown command is supplied to the application, it is outputting the perror with an error code of "No Such Process".  That's the closest I could find.  Also, the shell that is created also reports "command not found", so I end up with two error statements.  It looks like this:
-
-'''
+```
 ➜ ./doenv clo
 sh: clo: command not found
 Unknown command: clo: No such process
-'''
+```
 Per my conversation with Jared Diehl on 2/8/2021, this response is acceptable.
 
 ## Work Log
