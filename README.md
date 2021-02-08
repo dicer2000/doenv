@@ -55,9 +55,9 @@ Per my conversation with Jared Diehl on 2/8/2021, this response is acceptable.
 
 ## Work Log
 
-1/28/2021 - Started re-working for doenv command. Created basic outline of program, Makefile, README. Performed Testing. Started a test program. Tested on UNIX. Fixed stat problem
-1/29/2021 - Redesigned getopt logic; Added switch logic; Testing; Added pError
-1/30/2021 - Finished Environ logic, debugging; Trying on different platforms to determine which will work best for UNIX. Made additional comments.  Handed in v1.0 of the program
-2/7/2021 - Performed testing and changed the error reporting to better utilize sterror.
+- 1/28/2021 - Started re-working for doenv command. Created basic outline of program, Makefile, README. Performed Testing. Started a test program. Tested on UNIX. Fixed stat problem
+- 1/29/2021 - Redesigned getopt logic; Added switch logic; Testing; Added pError
+- 1/30/2021 - Finished Environ logic, debugging; Trying on different platforms to determine which will work best for UNIX. Made additional comments.  Handed in v1.0 of the program
+- 2/7/2021 - Performed testing and changed the error reporting to better utilize sterror.
 
 *©2021 Brett W. Huffman*
