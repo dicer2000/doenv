@@ -41,18 +41,24 @@ int main(int argc, char* argv[])
             case 'i':
                 bReplaceEnvironmentVars = true;
                 break;
-            case '?': // Unknown arguement
+            case '?': // Unknown arguement                
                 if (isprint (optopt))
-                    fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+                {
+                    errno = EINVAL;
+                    perror("Unknown option");
+//                    fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+                }
                 else
-                    fprintf (stderr,
-                        "Unknown option character `\\x%x'.\n", optopt);
-                return 1;
+                {
+                    errno = EINVAL;
+                    perror("Unknown option character");
+                }
+                return -1;
             default:    // An bad input parameter was entered
                 // Show error because a bad option was found
                 perror ("doenv: Error: Illegal option found");
                 show_usage(argv[0]);
-                return 1;
+                return -1;
         }
     }
 
@@ -95,11 +101,11 @@ int main(int argc, char* argv[])
 
     // If no new Environ Vars specified, 
     // then just print environment
-    if(vecEnvVars.size() < 1)
-    {
-        printEnvironment();
-        return 0;
-    }
+//    if(vecEnvVars.size() < 1)
+//    {
+//        printEnvironment();
+//        return 0;
+//    }
 
     // If Environ Vars specified Add them
     // This will also overwrite existing env vars
@@ -129,8 +135,23 @@ int main(int argc, char* argv[])
         // to the initial program arguments
         for(std::vector<std::string>::const_iterator f = vecCommands.begin(); f != vecCommands.end(); ++f)
         {
+            // Get command from iterator
             std::string strCommand = *f;
-            system(strCommand.c_str());
+
+            // Per system man page, make sure Command is not NULL
+            if(strCommand.c_str() == NULL || strCommand.size() < 1)
+                continue;
+
+            // Make the system call, check the return value for success
+            int retValue = system(strCommand.c_str());
+            // System return 0 for success
+            if(retValue!=0)
+            {
+                // Error occurred, give user feedback via perror
+                std::string strError = "Unknown command: " + strCommand;
+                errno = ESRCH;
+                perror(strError.c_str());
+            }
         }
     }
 
